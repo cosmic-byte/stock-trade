@@ -4,10 +4,10 @@ from django.contrib import admin
 from stock_trade.apps.user import models
 
 
-class AppAdminAdmin(admin.ModelAdmin):
-    list_display = ('user', 'first_name', 'last_name', 'gender', 'created_by',)
-    search_fields = ('user__email', 'created_by__email',)
+class StockTradeUserAdmin(admin.ModelAdmin):
+    list_display = ('user', 'first_name', 'last_name', 'gender', 'admin_created_by',)
+    search_fields = ('user__email', 'user__groups__first__name', 'created_by__email',)
 
 
-admin.site.register(models.AppAdmin, AppAdminAdmin)
+admin.site.register(models.StockTradeUser, StockTradeUserAdmin)
 admin.site.register(models.User)

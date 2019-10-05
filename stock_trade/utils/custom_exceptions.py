@@ -24,3 +24,9 @@ class InvalidModelException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'The model is not properly constructed'
     default_code = 'bad_request'
+
+
+class StockQueryException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'Failed to fetch company stock'
+    default_code = 'bad_request'

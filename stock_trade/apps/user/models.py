@@ -39,9 +39,14 @@ class User(PermissionsMixin, AbstractBaseUser):
     objects = UserManager()
 
 
-class AppAdmin(models.Model):
+class StockTradeUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='created_by', null=True)
+    admin_created_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name='created_by',
+        null=True
+    )
     first_name = models.CharField(max_length=20, blank=True)
     last_name = models.CharField(max_length=20, blank=True)
     gender = models.IntegerField(choices=User.GENDER, null=True)

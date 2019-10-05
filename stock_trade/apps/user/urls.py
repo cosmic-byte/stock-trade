@@ -11,7 +11,7 @@ from stock_trade.auth import JWTSerializer, JWTRefreshTokenSerializer
 from stock_trade.custom_router_retrieve_has_no_param import CustomRouterRetrieveHasNoParam
 
 router = CustomRouterRetrieveHasNoParam()
-router.register(r'', AdminViewSet, base_name='app_admin')
+router.register(r'admin', AdminViewSet, base_name='app_admin')
 
 
 user_urls = [

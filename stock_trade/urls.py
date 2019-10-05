@@ -1,4 +1,4 @@
-"""eburu URL Configuration
+"""Stock-Market URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -23,12 +23,11 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Assessment Portal Web Service Documentation",
+        title="Stock Trading platform",
         default_version='v1.0',
-        description="Full platform documentation for assessment stock_trade",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="support.stock_trade.ng"),
-        license=openapi.License(name="AS License"),
+        description="A stock trading app for users to fund their accounts, buy, and sell stocks.",
+        contact=openapi.Contact(email="support.stock-trade.ng"),
+        license=openapi.License(name="Stock Trade License"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -39,6 +38,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth', include('stock_trade.apps.user.urls')),
+    path('stock', include('stock_trade.apps.stocks.urls')),
     path('', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
     path('docs', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
 ]

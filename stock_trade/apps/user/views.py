@@ -15,14 +15,13 @@ from rest_framework_jwt.serializers import (
     jwt_encode_handler
 )
 
-from stock_trade.apps.user.models import AppAdmin
+from stock_trade.apps.user.models import StockTradeUser
 from stock_trade.apps.user.serializer import (
     UserCreateSerializer,
     EnableDisableUserSerializer,
     DeleteUserSerializer,
     CreateAdminSerializer,
-    RetrieveAdminSerializer
-)
+    CreateStockUserSerializer, RetrieveStockTradeUserSerializer)
 from stock_trade.permissions import CustomDjangoModelPermissions
 from stock_trade.utils.model_utils import get_object_or_400
 
@@ -30,15 +29,18 @@ User = get_user_model()
 
 
 class UserCreateView(CreateAPIView):
+    """
+    Register a new user.
+    """
     permission_classes = (AllowAny,)
     queryset = User.objects.all()
-    serializer_class = UserCreateSerializer
+    serializer_class = CreateStockUserSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.create(serializer.data)
-        payload = jwt_payload_handler(user)
+        stock_user = serializer.create(serializer.data)
+        payload = jwt_payload_handler(stock_user.user)
         response = {
             'token': jwt_encode_handler(payload),
             'user': serializer.data
@@ -82,7 +84,10 @@ class AdminViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
                    viewsets.GenericViewSet):
-    queryset = AppAdmin.objects.all()
+    """
+    App admin ViewSet
+    """
+    queryset = StockTradeUser.objects.all()
     serializer_class = CreateAdminSerializer
     permission_classes = (CustomDjangoModelPermissions,)
 
@@ -92,5 +97,5 @@ class AdminViewSet(mixins.CreateModelMixin,
         return obj
 
     def retrieve(self, request, *args, **kwargs):
-        serializer = RetrieveAdminSerializer(self.get_object())
+        serializer = RetrieveStockTradeUserSerializer(self.get_object())
         return Response(serializer.data, status=status.HTTP_200_OK)

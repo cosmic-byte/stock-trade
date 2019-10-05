@@ -20,6 +20,12 @@ class UserManager(BaseUserManager):
         user.groups.add(admin_group)
         return user
 
+    def create_stock_trade_user(self, email=None, password=None, **extra_fields):
+        stock_user_group = get_object_or_404(Group, name='stock_user')
+        user = self.create_base_user(email=email, password=password, **extra_fields)
+        user.groups.add(stock_user_group)
+        return user
+
     def create_superuser(self, email, password, **extra_fields):
         user = self.create_base_user(email=email, password=password, **extra_fields)
         user.is_admin = True

@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 
-from stock_trade.apps.user.models import AppAdmin
+from stock_trade.apps.user.models import StockTradeUser
 
 User = get_user_model()
 
@@ -20,7 +20,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ('email', 'password',)
 
     def create(self, validated_data):
-        user = User.objects.create_base_user(
+        user = User.objects.create_stock_trade_user(
             email=validated_data.pop('email'),
             password=validated_data.pop('password'),
             **validated_data
@@ -66,12 +66,33 @@ class DeleteUserSerializer(serializers.ModelSerializer):
         return instance
 
 
+class CreateStockUserSerializer(serializers.ModelSerializer):
+
+    user = UserCreateSerializer()
+
+    class Meta:
+        model = StockTradeUser
+        fields = ('first_name', 'last_name', 'gender', 'user',)
+
+    def create(self, validated_data):
+        user_to_create = validated_data.pop('user')
+        user = User.objects.create_stock_trade_user(
+            email=user_to_create['email'],
+            password=user_to_create['password'],
+        )
+        stock_user = StockTradeUser.objects.create(
+            user=user,
+            **validated_data
+        )
+        return stock_user
+
+
 class CreateAdminSerializer(serializers.ModelSerializer):
 
     user = UserCreateSerializer()
 
     class Meta:
-        model = AppAdmin
+        model = StockTradeUser
         fields = ('first_name', 'last_name', 'gender', 'user',)
 
     def create(self, validated_data):
@@ -81,16 +102,16 @@ class CreateAdminSerializer(serializers.ModelSerializer):
             email=user_to_create['email'],
             password=user_to_create['password'],
         )
-        admin = AppAdmin.objects.create(
+        admin = StockTradeUser.objects.create(
             user=user,
-            created_by=logged_in_user,
+            admin_created_by=logged_in_user,
             **validated_data
         )
         return admin
 
 
-class RetrieveAdminSerializer(serializers.ModelSerializer):
+class RetrieveStockTradeUserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = AppAdmin
+        model = StockTradeUser
         fields = ('first_name', 'last_name', 'gender',)

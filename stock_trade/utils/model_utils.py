@@ -1,3 +1,5 @@
+import re
+
 from stock_trade.utils.custom_exceptions import ModelNotFoundException
 
 
@@ -45,3 +47,16 @@ def get_object_or_none(klass, **kwargs):
     except (queryset.model.DoesNotExist, KeyError):
         return None
 
+
+def camel_to_snake(name):
+    """Convert a camelCase name to snake_case."""
+    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+
+
+def snake_to_camel(name):
+    """Convert a snake_case name to camelCase."""
+    if "_" in name:
+        parts = name.split("_")
+        return parts[0] + "".join(s.title() for s in parts[1:])
+    return name

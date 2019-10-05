@@ -1,7 +1,7 @@
 import factory
 from factory import post_generation
 
-from stock_trade.apps.user.models import User, AppAdmin
+from stock_trade.apps.user.models import User, StockTradeUser
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -21,4 +21,5 @@ class AppAdminFactory(factory.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 
     class Meta:
-        model = AppAdmin
+        model = StockTradeUser
+

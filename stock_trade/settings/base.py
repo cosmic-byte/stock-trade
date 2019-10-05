@@ -2,14 +2,16 @@
 import datetime
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import environ
 
+env = environ.Env()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# env.read_env('.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'alq7#8r33k!cv47r8pelqldnkl46v!b4-sfwvdo$x(=p%1read'
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='alq7#8r33k!cv47r8pelqldnkl46v!b4-sfwvdo$x(=p%1read')
 
 # Application definition
 AUTH_USER_MODEL = 'user.User'
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'rest_framework',
     'stock_trade.apps.user',
+    'stock_trade.apps.stocks',
     'drf_yasg',
 ]
 
@@ -174,3 +177,4 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'fanout_prefix': True,
     'fanout_patterns': True
 }
+

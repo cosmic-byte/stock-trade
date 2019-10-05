@@ -4,7 +4,7 @@ from calendar import timegm
 
 from rest_framework_jwt.settings import api_settings
 
-from stock_trade.apps.user.serializer import UserRetrieveSerializer, RetrieveAdminSerializer
+from stock_trade.apps.user.serializer import UserRetrieveSerializer, RetrieveStockTradeUserSerializer
 from django.contrib.auth import authenticate
 
 from rest_framework import serializers
@@ -18,21 +18,9 @@ from rest_framework_jwt.serializers import (
 from stock_trade.apps.user.models import User
 
 
-def get_logged_in_user_profile(user, groups):
-
-    def _app_admin():
-        return RetrieveAdminSerializer(user.appadmin)
-
-    if len(groups) <= 0:
-        return None
-
-    profile_serializers = {
-        'app_admin': _app_admin,
-    }
-
+def get_logged_in_user_profile(user):
     try:
-        group = groups[0]['name']
-        return profile_serializers.get(group)().data
+        return RetrieveStockTradeUserSerializer(user.stocktradeuser).data
     except (KeyError, TypeError):
         return None
 
@@ -112,7 +100,7 @@ class JWTRefreshTokenSerializer(RefreshJSONWebTokenSerializer):
 
 def jwt_response_payload_handler(token, user=None, request=None):
     user_data = UserRetrieveSerializer(instance=user).data
-    profile = get_logged_in_user_profile(user, user_data['groups'])
+    profile = get_logged_in_user_profile(user)
     if profile:
         user_data['profile'] = profile
 

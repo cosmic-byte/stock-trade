@@ -18,7 +18,7 @@ class TestAppAdminView:
                 'password': 'password',
             }
         }
-        url = reverse('app_admin:app_admin-create')
+        url = reverse('app_admin-create')
         response = api_client.post(url, payload, format='json')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
@@ -35,7 +35,7 @@ class TestAppAdminView:
                 'password': 'password',
             }
         }
-        url = reverse('app_admin:app_admin-create')
+        url = reverse('app_admin-create')
         response = client.post(url, payload, format='json')
 
         assert response.status_code == status.HTTP_201_CREATED
