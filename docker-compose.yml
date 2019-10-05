@@ -1,0 +1,25 @@
+version: '2'
+services:
+ stock-trade-api:
+   build:
+     context: .
+     dockerfile: ./docker/Dockerfile
+   volumes:
+     - .:/var/app
+   command: /var/app/scripts/run_local.sh
+   ports:
+     - 8081
+   depends_on:
+     - stock-db
+
+ stock-db:
+   image: postgres
+   restart: always
+   ports:
+     - "5433:5432"
+   environment:
+     POSTGRES_PASSWORD: stock_trade
+     POSTGRES_USER: stock_trade
+     POSTGRES_DB: stock_trade
+   volumes:
+     - ./pg_data_docker:/var/lib/postgresql/data
